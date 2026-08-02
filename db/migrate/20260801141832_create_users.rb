@@ -6,6 +6,7 @@ class CreateUsers < ActiveRecord::Migration[8.1]
       t.datetime :otp_expires_at
       t.string :session_token
       t.string :name
+      t.integer :failed_otp_attempts
 
       t.timestamps
     end

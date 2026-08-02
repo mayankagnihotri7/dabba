@@ -4,6 +4,8 @@ class Api::V1::AuthController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def request_otp
+    return render json: { message: "OTP sent" } if params[:website].present?
+
     user = User.find_or_initialize_by(phone_number: otp_request_params[:phone_number])
     if user.persisted? && user.otp_expires_at.present? && user.otp_expires_at > 1.minute.ago
       render json: { error: "Please wait before requesting another code" }, status: :too_many_requests
