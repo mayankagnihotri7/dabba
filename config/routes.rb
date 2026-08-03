@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       post "auth/request_otp", to: "auth#request_otp"
-      post "auth_verify_otp", to: "auth#verify_otp"
+      post "auth/verify_otp", to: "auth#verify_otp"
       patch "users/name", to: "auth#update_name"
     end
   end

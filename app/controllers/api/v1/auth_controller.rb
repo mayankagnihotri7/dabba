@@ -2,6 +2,7 @@
 
 class Api::V1::AuthController < ApplicationController
   skip_before_action :verify_authenticity_token
+  before_action :authenticate_user!, only: [ :update_name ]
 
   def request_otp
     return render json: { message: "OTP sent" } if params[:website].present?
@@ -32,21 +33,21 @@ class Api::V1::AuthController < ApplicationController
 
   def update_name
     current_user.update!(user_name_params)
-    render json: { name: curent_user.name }
+    render json: { name: current_user.name }
   end
 
 
   private
 
   def otp_request_params
-    params.permit(:phone_number)
+    params.require(:auth).permit(:phone_number)
   end
 
   def otp_verify_params
-    params.permit(:phone_number, :code)
+    params.require(:auth).permit(:phone_number, :code)
   end
 
   def user_name_params
-    params.permit(:name)
+    params.require(:auth).permit(:name)
   end
 end
