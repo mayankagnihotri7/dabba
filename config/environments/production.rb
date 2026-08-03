@@ -69,7 +69,7 @@ Rails.application.configure do
     port: 587,
     authentication: :plain,
     domain: "gmail.com",
-    enable_starttls_auto: true
+    ssl: true
   }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
