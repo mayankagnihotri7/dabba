@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import api from "../../lib/api";
 
 const AuthScreen = ({ onAuthenticated }) => {
@@ -6,13 +6,17 @@ const AuthScreen = ({ onAuthenticated }) => {
   const [code, setCode] = useState("");
   const [step, setStep] = useState("phone");
   const [error, setError] = useState(null);
+  const honeypotRef = useRef(null);
 
   const requestOtp = async (e) => {
     e.preventDefault();
     setError(null);
 
     try {
-      await api.post("/auth/request_otp", { phone_number: phone });
+      await api.post("/auth/request_otp", {
+        phone_number: phone,
+        website: honeypotRef.current.value,
+      });
       setStep("otp");
     } catch (err) {
       setError(err.response?.data?.error || "Could not send code, try again");
@@ -29,7 +33,7 @@ const AuthScreen = ({ onAuthenticated }) => {
         code,
       });
       localStorage.setItem("dabba_token", res.data.token);
-      onAuthenticated(res.data.token)
+      onAuthenticated(res.data.token);
     } catch (err) {
       setError(err.response?.data?.error || "Invalid code");
     }
@@ -39,11 +43,11 @@ const AuthScreen = ({ onAuthenticated }) => {
     <div className='min-h-screen bg-dabba-bg flex items-center justify-center px-6'>
       <div className='w-full max-w-sm'>
         <div className='text-center mb-8'>
-          <div className="text-center mb-8">
-            <p className="font-mono text-[11px] tracking-widest text-dabba-teal uppercase mb-1">
+          <div className='text-center mb-8'>
+            <p className='font-mono text-[11px] tracking-widest text-dabba-teal uppercase mb-1'>
               Dabba · Local
             </p>
-            <h1 className="font-display text-2xl text-dabba-text">
+            <h1 className='font-display text-2xl text-dabba-text'>
               a minute to yourself
             </h1>
           </div>
@@ -53,7 +57,7 @@ const AuthScreen = ({ onAuthenticated }) => {
               : "Verify · Enter your code"}
           </p>
 
-          <div className="ticket-card pt-6 px-7 pb-7">
+          <div className='ticket-card pt-6 px-7 pb-7'>
             {step === "phone" ? (
               <form onSubmit={requestOtp}>
                 <label className='block text-sm text-dabba-text/75 mb-2'>
@@ -75,6 +79,7 @@ const AuthScreen = ({ onAuthenticated }) => {
                 <input
                   type='text'
                   name='website'
+                  ref={honeypotRef}
                   style={{ display: "none" }}
                   tabIndex='-1'
                   autoComplete='off'
@@ -111,7 +116,9 @@ const AuthScreen = ({ onAuthenticated }) => {
               </form>
             )}
             {error && (
-              <p className='text-dabba-alert text-sm text-center mt-4'>{error}</p>
+              <p className='text-dabba-alert text-sm text-center mt-4'>
+                {error}
+              </p>
             )}
           </div>
         </div>

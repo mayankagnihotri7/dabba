@@ -5,7 +5,7 @@ class Api::V1::AuthController < ApplicationController
   before_action :authenticate_user!, only: [ :update_name ]
 
   def request_otp
-    return render json: { message: "OTP sent" } if params[:website].present?
+    return render json: { message: "OTP sent" } if otp_request_params[:website].present?
 
     user = User.find_or_initialize_by(phone_number: otp_request_params[:phone_number])
     if user.persisted? && user.otp_expires_at.present? && user.otp_expires_at > 1.minute.ago
@@ -40,7 +40,7 @@ class Api::V1::AuthController < ApplicationController
   private
 
   def otp_request_params
-    params.require(:auth).permit(:phone_number)
+    params.require(:auth).permit(:phone_number, :website)
   end
 
   def otp_verify_params
