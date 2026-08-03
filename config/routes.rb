@@ -7,6 +7,14 @@ Rails.application.routes.draw do
 
   root "home#index"
 
+  namespace :api do
+    namespace :v1 do
+      post "auth/request_otp", to: "auth#request_otp"
+      post "auth/verify_otp", to: "auth#verify_otp"
+      patch "users/name", to: "auth#update_name"
+    end
+  end
+
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
