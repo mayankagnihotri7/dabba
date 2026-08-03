@@ -16,14 +16,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_01_141832) do
 
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.string "email"
     t.integer "failed_otp_attempts"
     t.string "name"
     t.string "otp_code_digest"
     t.datetime "otp_expires_at"
-    t.string "phone_number"
     t.string "session_token"
     t.datetime "updated_at", null: false
-    t.index ["phone_number"], name: "index_users_on_phone_number", unique: true
+    t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["session_token"], name: "index_users_on_session_token", unique: true
   end
 end

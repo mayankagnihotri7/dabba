@@ -1,9 +1,7 @@
 class User < ApplicationRecord
-  PHONE_REGEX = /\A[6-9]\d{9}\z/
-
   attr_accessor :otp_code
 
-  validates :phone_number, presence: true, uniqueness: true, format: { with: PHONE_REGEX, message: "must be a valid number" }
+  validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
 
   def generate_otp!
     code = rand(100000..999999).to_s

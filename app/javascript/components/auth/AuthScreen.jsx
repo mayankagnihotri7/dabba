@@ -2,9 +2,9 @@ import { useRef, useState } from "react";
 import api from "../../lib/api";
 
 const AuthScreen = ({ onAuthenticated }) => {
-  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
-  const [step, setStep] = useState("phone");
+  const [step, setStep] = useState("email");
   const [error, setError] = useState(null);
   const honeypotRef = useRef(null);
 
@@ -14,7 +14,7 @@ const AuthScreen = ({ onAuthenticated }) => {
 
     try {
       await api.post("/auth/request_otp", {
-        phone_number: phone,
+        email,
         website: honeypotRef.current.value,
       });
       setStep("otp");
@@ -29,7 +29,7 @@ const AuthScreen = ({ onAuthenticated }) => {
 
     try {
       const res = await api.post("/auth/verify_otp", {
-        phone_number: phone,
+        email,
         code,
       });
       localStorage.setItem("dabba_token", res.data.token);
@@ -52,27 +52,23 @@ const AuthScreen = ({ onAuthenticated }) => {
             </h1>
           </div>
           <p className='font-mono text-[11px] tracking-widest text-dabba-text/50 uppercase mb-6'>
-            {step === "phone"
+            {step === "email"
               ? "Ticket · Board to continue"
               : "Verify · Enter your code"}
           </p>
 
           <div className='ticket-card pt-6 px-7 pb-7'>
-            {step === "phone" ? (
+            {step === "email" ? (
               <form onSubmit={requestOtp}>
                 <label className='block text-sm text-dabba-text/75 mb-2'>
                   Mobile number
                 </label>
                 <div className='flex gap-2 mb-5'>
-                  <div className='bg-dabba-bg rounded-lg px-3.5 py-3 font-mono text-dabba-text/60 text-sm'>
-                    +91
-                  </div>
                   <input
-                    type='tel'
-                    placeholder='98765 43210'
-                    value={phone}
-                    maxLength={10}
-                    onChange={(e) => setPhone(e.target.value)}
+                    type='email'
+                    placeholder='you@example.com'
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className='flex-1 bg-dabba-bg border border-dabba-text/10 rounded-lg px-3.5 py-3 text-dabba-text text-sm focus:outline-none focus:border-dabba-amber'
                   />
                 </div>
