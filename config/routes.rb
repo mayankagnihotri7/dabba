@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       post "auth/request_otp", to: "auth#request_otp"
       post "auth/verify_otp", to: "auth#verify_otp"
       patch "users/name", to: "auth#update_name"
+      post "moments", to: "moments#create"
     end
   end
 
