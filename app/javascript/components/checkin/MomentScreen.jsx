@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Frown, Meh, Smile, Laugh } from "lucide-react";
 import api from "../../lib/api";
 import ResponseCard from "./ResponseCard";
+import { classifyMood, getClassifier } from "../../lib/classifier";
+import { generateResponse, getGenerator } from "../../lib/generator";
+import ModelLoader from "../ModelLoader";
 
 const MOODS = [
   { key: "stressed", label: "Stressed", Icon: Frown },
@@ -23,15 +26,64 @@ const MomentScreen = () => {
   const [mood, setMood] = useState(null);
   const [note, setNote] = useState("");
   const [response, setResponse] = useState(null);
+  const [modelReady, setModelReady] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const loadProgress = useRef({ classifier: 0, generator: 0 });
+
+  useEffect(() => {
+    const trackProgress = (name) => (data) => {
+      if (data.status === "progress") {
+        loadProgress.current[name] = data.progress;
+        const avg =
+          (loadProgress.current.classifier + loadProgress.current.generator) /
+          2;
+        setProgress(Math.round(avg));
+      }
+    };
+
+    // preload both models in the background so the first moment isn't slow
+    Promise.all([
+      getClassifier(trackProgress("classifier")),
+      getGenerator(trackProgress("generator")),
+    ]).then(() => setModelReady(true));
+  }, []);
+
+  if (!modelReady) return <ModelLoader progress={progress} />;
 
   const submit = async (e) => {
     e.preventDefault();
     if (!mood) return;
 
-    setResponse(STUB_RESPONSES[mood]);
+    let finalMood = mood;
+
+    if (note.trim().length > 0) {
+      try {
+        finalMood = await classifyMood(note);
+      } catch (err) {
+        console.error(
+          "Classification failed, falling back to tapped mood",
+          err,
+        );
+      }
+    }
+
+    setGenerating(true);
+    let text;
 
     try {
-      await api.post("/moments", { mood });
+      const generated = await generateResponse(finalMood, note);
+      text = generated.length > 10 ? generated : STUB_RESPONSES[finalMood];
+    } catch (err) {
+      console.error("Generator failed, using fallback", err);
+      text = STUB_RESPONSES[finalMood];
+    }
+    setGenerating(false);
+
+    setResponse(text);
+
+    try {
+      await api.post("/moments", { mood: finalMood });
     } catch (e) {
       console.error("Failed to save moment", e);
     }
@@ -87,10 +139,14 @@ const MomentScreen = () => {
 
           <button
             type='submit'
-            disabled={!mood}
+            disabled={!mood || generating}
             className='w-full bg-dabba-bg text-dabba-text font-semibold text-sm rounded-lg py-3.5 disabled:opacity-40 cursor-pointer'
           >
-            Get something for me
+            {!modelReady
+              ? "getting ready..."
+              : generating
+                ? "thinking..."
+                : "Get something for me"}
           </button>
         </form>
       </div>
