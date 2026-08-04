@@ -9,6 +9,8 @@ class Api::V1::MomentsController < ApplicationController
     else
       render json: { error: moment.errors.full_messages.first }, status: :unprocessable_entity
     end
+  rescue ArgumentError
+    render json: { error: "Invalid mood" }, status: :unprocessable_entity
   end
 
   private
