@@ -3,6 +3,8 @@ class User < ApplicationRecord
 
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
 
+  has_many :moments
+
   def generate_otp!
     code = rand(100000..999999).to_s
     self.otp_code = code

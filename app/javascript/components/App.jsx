@@ -1,6 +1,7 @@
 import { useState } from "react";
 import AuthScreen from "./auth/AuthScreen";
 import NamePrompt from "./auth/NamePrompt";
+import MomentScreen from "./checkin/MomentScreen";
 
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem("dabba_token"));
@@ -14,7 +15,7 @@ const App = () => {
   if (!token) return <AuthScreen onAuthenticated={handleAuthenticated} />;
   if (justLoggedIn) return <NamePrompt token={token} onDone={(e) => setJustLoggedIn(false)} />
 
-  return <h1>Logged in</h1>;
+  return <MomentScreen />;
 };
 
 export default App;
