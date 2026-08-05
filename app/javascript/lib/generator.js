@@ -7,7 +7,7 @@ const MOOD_PROMPTS = {
     "Someone on a Mumbai train is feeling tired right now. Write one short, gentle sentence about resting without guilt:",
   neutral:
     "Someone on a Mumbai train is feeling neutral right now. Write one short, quietly observant sentence about an ordinary moment:",
-  good: "Someone on a Mumbai train is feel good right now. Write one short, warm sentence that celebrates that without being over the top:",
+  good: "Someone on a Mumbai train is feeling good right now. Write one short, warm sentence that celebrates that without being over the top:",
 };
 
 let generatorPromise = null;
@@ -40,7 +40,7 @@ export const generateResponse = async (mood, ventText) => {
     {
       role: "system",
       content:
-        "You are a warm, minimalist companion for Mumbai local train commuters. Reply with strictly one seingle sentence and nothing else.",
+        "You are a warm, minimalist companion for Mumbai local train commuters. Reply with strictly one single sentence and nothing else.",
     },
     { role: "user", content: userInstruction },
   ];
