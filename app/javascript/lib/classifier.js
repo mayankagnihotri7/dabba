@@ -5,7 +5,7 @@ let classifierPromise = null;
 export const getClassifier = (onProgress) => {
   if (!classifierPromise) {
     classifierPromise = pipeline(
-      "sentiment-analysis",
+      "text-classification",
       "Xenova/distilbert-base-uncased-finetuned-sst-2-english",
       { progress_callback: onProgress },
     );
@@ -13,12 +13,17 @@ export const getClassifier = (onProgress) => {
   return classifierPromise;
 };
 
+const EMOTION_TO_MOOD = {
+  anger: "stressed",
+  fear: "stressed",
+  sadness: "tired",
+  joy: "good",
+  love: "good",
+  surprise: "neutral"
+}
+
 export const classifyMood = async (text) => {
   const classifier = await getClassifier();
-  const [{ label, score }] = await classifier(text);
-
-  if (label === "POSITIVE") {
-    return score > 0.85 ? "good" : "neutral";
-  }
-  return score > 0.85 ? "stressed" : "tired";
+  const [{ label }] = await classifier(text);
+  return EMOTION_TO_MOOD[label] ?? "neutral"
 };

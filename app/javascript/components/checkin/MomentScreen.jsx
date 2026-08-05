@@ -46,14 +46,28 @@ const MomentScreen = () => {
     Promise.all([
       getClassifier(trackProgress("classifier")),
       getGenerator(trackProgress("generator")),
-    ]).then(() => setModelReady(true));
+    ])
+      .then(() => setModelReady(true))
+      .catch((e) => console.error(e));
   }, []);
 
   if (!modelReady) return <ModelLoader progress={progress} />;
 
+  const withTimeout = (promise, ms) => {
+    return Promise.race([
+      promise,
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("timed out")), ms),
+      ),
+    ]);
+  };
+
   const submit = async (e) => {
     e.preventDefault();
-    if (!mood) return;
+    if (!mood && !note.trim()) return;
+
+    setGenerating(true);
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     let finalMood = mood;
 
@@ -68,17 +82,25 @@ const MomentScreen = () => {
       }
     }
 
-    setGenerating(true);
+    if (!finalMood) return;
+
     let text;
 
     try {
-      const generated = await generateResponse(finalMood, note);
-      text = generated.length > 10 ? generated : STUB_RESPONSES[finalMood];
+      const generated = await withTimeout(
+        generateResponse(finalMood, note),
+        15000,
+      );
+      text =
+        generated && generated.length > 5
+          ? generated
+          : STUB_RESPONSES[finalMood];
     } catch (err) {
       console.error("Generator failed, using fallback", err);
       text = STUB_RESPONSES[finalMood];
+    } finally {
+      setGenerating(false);
     }
-    setGenerating(false);
 
     setResponse(text);
 
@@ -139,7 +161,7 @@ const MomentScreen = () => {
 
           <button
             type='submit'
-            disabled={!mood || generating}
+            disabled={(!mood && !note.trim()) || generating}
             className='w-full bg-dabba-bg text-dabba-text font-semibold text-sm rounded-lg py-3.5 disabled:opacity-40 cursor-pointer'
           >
             {!modelReady
