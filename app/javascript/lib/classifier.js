@@ -21,5 +21,5 @@ const EMOTION_TO_MOOD = {
 export const classifyMood = async (text) => {
   const classifier = await getClassifier();
   const [{ label }] = await classifier(text);
-  return EMOTION_TO_MOOD[label.toLowerCase()] ?? "neutral";
+  return EMOTION_TO_MOOD[label.toLowerCase()];
 };
