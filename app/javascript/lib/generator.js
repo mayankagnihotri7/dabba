@@ -10,6 +10,15 @@ const MOOD_PROMPTS = {
   good: "Someone on a Mumbai train is feeling good right now. Write one short, warm sentence that celebrates that without being over the top:",
 };
 
+const STUB_RESPONSES = {
+  stressed:
+    "Three stops left. Whatever's waiting after this ride can wait ten more seconds - look up.",
+  tired:
+    "You don't have to be anything right now except a person on a train. That's enough.",
+  neutral: "Some rides are just rides. That's a fine way for one to go.",
+  good: "Good - hold on to that. It's allowed to just be a good day, no reason needed.",
+};
+
 let generatorPromise = null;
 
 export const getGenerator = (onProgress) => {
@@ -70,5 +79,5 @@ export const generateResponse = async (mood, ventText) => {
     cleaned.includes("Write one short") ||
     cleaned.includes("Someone on a Mumbai train");
 
-  return looksBroken ? MOOD_PROMPTS[mood] : cleaned;
+  return looksBroken ? STUB_RESPONSES[mood] : cleaned;
 };
