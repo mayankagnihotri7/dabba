@@ -14,16 +14,12 @@ export const getClassifier = (onProgress) => {
 };
 
 const EMOTION_TO_MOOD = {
-  anger: "stressed",
-  fear: "stressed",
-  sadness: "tired",
-  joy: "good",
-  love: "good",
-  surprise: "neutral"
-}
+  positive: "good",
+  negative: "stressed",
+};
 
 export const classifyMood = async (text) => {
   const classifier = await getClassifier();
   const [{ label }] = await classifier(text);
-  return EMOTION_TO_MOOD[label] ?? "neutral"
+  return EMOTION_TO_MOOD[label.toLowerCase()] ?? "neutral";
 };

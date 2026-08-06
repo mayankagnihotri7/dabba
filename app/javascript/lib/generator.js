@@ -26,9 +26,9 @@ export const getGenerator = (onProgress) => {
 };
 
 const trimToLastSentence = (text) => {
-  const match = text.match(/^.*[.!?]/);
-  return match ? match[0] : text
-}
+  const match = text.match(/^[^.?!]*[.!?]/);
+  return match ? match[0] : text;
+};
 
 export const generateResponse = async (mood, ventText) => {
   const generator = await getGenerator();
@@ -53,12 +53,22 @@ export const generateResponse = async (mood, ventText) => {
     repetition_penalty: 1.3,
   });
 
-  const raw =
-    output[0]?.generated_text?.at(-1)?.content?.trim() ?? "";
+  const generatedEntry = output[0]?.generated_text;
+  let raw = "";
+
+  if (Array.isArray(generatedEntry)) {
+    raw = generatedEntry?.at(-1)?.content?.trim() ?? "";
+  } else if (typeof generatedEntry === "string") {
+    raw = generatedEntry.trim();
+  }
 
   const trimmed = trimToLastSentence(raw);
   const cleaned = trimmed.replace(/^["']|["']$/g, "").trim();
-  const looksBroken = cleaned.length < 5 || cleaned.toLowerCase().includes("warm, minimalist, companion") // catch prompt echo phrases
+  const looksBroken =
+    cleaned.length < 5 ||
+    cleaned.includes("Reply with") ||
+    cleaned.includes("Write one short") ||
+    cleaned.includes("Someone on a Mumbai train");
 
-  return looksBroken ? MOOD_PROMPTS[mood] : cleaned
+  return looksBroken ? MOOD_PROMPTS[mood] : cleaned;
 };
