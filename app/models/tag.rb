@@ -6,5 +6,12 @@ class Tag < ApplicationRecord
     self.name = name.to_s.strip.downcase
   end
 
-  validates :name, presence: true, uniqueness: true
+  validates :name,
+    presence: true,
+    uniqueness: true,
+    length: { maximum: 30 },
+    format: {
+      with: /\A!#[a-z0-9_]+\z/,
+      message: "must start with !# and contain only letters, numbers and underscores"
+    }
 end
