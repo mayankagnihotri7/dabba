@@ -8,6 +8,7 @@ class CheerPost < ApplicationRecord
 
   scope :recent, -> { order(created_at: :desc) }
   scope :for_user, ->(user_id) { where(user_id: user_id) }
+  scope :tagged, ->(name) { joins(:tags).where(tags: { name: name.to_s.downcase }) }
 
   private
 

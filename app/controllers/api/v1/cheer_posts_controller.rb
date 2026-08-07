@@ -4,13 +4,16 @@ class Api::V1::CheerPostsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    cheer_posts = CheerPost.all
-    cheer_posts = cheer_posts.for_user(current_user.id) if current_user
+    cheer_posts = CheerPost.all.recent
+    cheer_posts = cheer_posts.for_user(current_user.id) if current_user && params[:mine_only]
+    cheer_posts = cheer_posts.tagged(params[:tag]) if params[:tag].present?
 
-    cheer_posts = cheer_posts.recent.includes(:tags)
+    page = (params[:page] || 1).to_i
+    per_page = 20
+    cheer_posts = cheer_posts.limit(per_page).offset((page - 1) * per_page)
 
     render json: cheer_posts.as_json(
-      except: :user_id,
+      except: [ :user_id ],
       include: :tags
     )
   end
