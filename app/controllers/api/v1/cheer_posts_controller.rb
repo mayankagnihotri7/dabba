@@ -5,10 +5,7 @@ class Api::V1::CheerPostsController < ApplicationController
 
   def index
     cheer_posts = CheerPost.all
-
-    if params[:user_id].present?
-      cheer_posts = cheer_posts.for_user(params[user_id]).includes(:tags)
-    end
+    cheer_posts = cheer_posts.for_user(current_user.id) if current_user
 
     cheer_posts = cheer_posts.recent.includes(:tags)
 
@@ -22,7 +19,7 @@ class Api::V1::CheerPostsController < ApplicationController
     cheer_post = ActiveRecord::Base.transaction do
       cheer_post = current_user.cheer_posts.new(body: cheer_post_params[:body])
 
-      cheer_post.tags = cheer_post_params[:tags].map do |tag_name|
+      cheer_post.tags = Array(cheer_post_params[:tags]).map do |tag_name|
         Tag.find_or_create_by!(name: tag_name)
       end
 
@@ -31,6 +28,8 @@ class Api::V1::CheerPostsController < ApplicationController
     end
 
     render json: cheer_post.as_json(except: [ :user_id ], include: :tags), status: :created
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { error: e.record.errors.full_messages.first }, status: :unprocessable_entity
   end
 
   def destroy

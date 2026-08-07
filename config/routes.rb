@@ -14,6 +14,7 @@ Rails.application.routes.draw do
       patch "users/name", to: "auth#update_name"
       resources :moments, only: [ :create ]
       resources :cheer_posts, only: %i[ index create destroy ]
+      resources :tags, only: [ :index ]
     end
   end
 
