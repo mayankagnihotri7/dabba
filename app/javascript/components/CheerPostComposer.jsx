@@ -3,7 +3,9 @@ import api from "../lib/api";
 import { MAX_LENGTH } from "../utils/constants";
 
 const extractTags = (text) => {
-  return [...text.matchAll(/!#(\w+)/g)].map((m) => m[1].toLowerCase());
+  return [
+    ...new Set([...text.matchAll(/!#(\w+)/g)].map((m) => m[1].toLowerCase())),
+  ];
 };
 
 const CheerPostComposer = ({ onPosted }) => {
@@ -27,6 +29,7 @@ const CheerPostComposer = ({ onPosted }) => {
       setBody("");
       onPosted();
     } catch (err) {
+      console.error(err)
       setError(err.response?.data?.error || "Couldn't post right now");
     } finally {
       setPosting(false);
