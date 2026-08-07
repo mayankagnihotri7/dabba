@@ -11,7 +11,7 @@ class Tag < ApplicationRecord
     uniqueness: true,
     length: { maximum: 30 },
     format: {
-      with: /\A!#[a-z0-9_]+\z/,
+      with: /\A[a-z0-9_]+\z/,
       message: "must start with !# and contain only letters, numbers and underscores"
     }
 end

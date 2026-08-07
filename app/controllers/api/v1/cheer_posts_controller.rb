@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::CheerPostsController < ApplicationController
-  before_action :authenticate_user!, only: %i[create destroy]
+  before_action :authenticate_user!
 
   def index
     cheer_posts = CheerPost.all
