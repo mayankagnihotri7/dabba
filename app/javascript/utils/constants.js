@@ -1,3 +1,5 @@
+import { Frown, Meh, Smile, Laugh } from "lucide-react";
+
 export const MOODS = [
   { key: "stressed", label: "Stressed", Icon: Frown },
   { key: "tired", label: "Tired", Icon: Meh },

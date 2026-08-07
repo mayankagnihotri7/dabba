@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { Frown, Meh, Smile, Laugh } from "lucide-react";
 import api from "../../lib/api";
 import ResponseCard from "./ResponseCard";
 import { classifyMood, getClassifier } from "../../lib/classifier";
