@@ -1,11 +1,10 @@
 import { useState } from "react";
 import api from "../lib/api";
+import { MAX_LENGTH } from "../utils/constants";
 
 const extractTags = (text) => {
   return [...text.matchAll(/!#(\w+)/g)].map((m) => m[1].toLowerCase());
 };
-
-const MAX_LENGTH = 280;
 
 const CheerPostComposer = ({ onPosted }) => {
   const [body, setBody] = useState("");

@@ -3,13 +3,7 @@ import AuthScreen from "./auth/AuthScreen";
 import NamePrompt from "./auth/NamePrompt";
 import MomentScreen from "./checkin/MomentScreen";
 import CheerWallScreen from "./CheerWallScreen";
-
-const TABS = {
-  MOMENT: "moment",
-  CHEER_WALL: "cheerwall",
-};
-
-const TOKEN_KEY = "dabba_token";
+import { TABS, TOKEN_KEY } from "../utils/constants";
 
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem(TOKEN_KEY));
