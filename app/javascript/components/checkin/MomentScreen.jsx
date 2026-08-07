@@ -122,7 +122,7 @@ const MomentScreen = () => {
   }
 
   return (
-    <div className='min-h-screen bg-dabba-bg flex items-center justify-center px-6'>
+    <div className="w-full max-w-sm mx-auto">
       <div className='w-full max-w-sm'>
         <div className='text-center mb-8'>
           <p className='font-mono text-[11px] tracking-widest text-dabba-teal uppercase mb-1'>
