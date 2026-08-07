@@ -5,23 +5,28 @@ const extractTags = (text) => {
   return [...text.matchAll(/!#(\w+)/g)].map((m) => m[1].toLowerCase());
 };
 
+const MAX_LENGTH = 280;
+
 const CheerPostComposer = ({ onPosted }) => {
   const [body, setBody] = useState("");
   const [posting, setPosting] = useState(false);
   const [error, setError] = useState(null);
+  const trimmedBody = body.trim();
 
   const submit = async (e) => {
     e.preventDefault();
-    if (!body.trim()) return;
+    if (!trimmedBody) return;
 
     setPosting(true);
     setError(null);
 
     try {
-      const tags = extractTags(body);
-      await api.post("/cheer_posts", { cheer_post: { body, tags } });
-      setBody("")
-      onPosted()
+      const tags = extractTags(trimmedBody);
+      await api.post("/cheer_posts", {
+        cheer_post: { body: trimmedBody, tags },
+      });
+      setBody("");
+      onPosted();
     } catch (err) {
       setError(err.response?.data?.error || "Couldn't post right now");
     } finally {
@@ -33,16 +38,19 @@ const CheerPostComposer = ({ onPosted }) => {
     <form onSubmit={submit} className='ticket-card pt-5 px-6 pb-5 mb-5'>
       <textarea
         value={body}
-        onChange={(e) => setBody(e.target.value.slice(0, 280))}
+        onChange={(e) => setBody(e.target.value.slice(0, MAX_LENGTH))}
+        disabled={posting}
         placeholder='share something good - try !#tags'
         rows={3}
         className='w-full bg-dabba-bg border border-dabba-text/10 rounded-lg px-3.5 py-3 text-dabba-text text-sm mb-2 focus:outline-none focus:border-dabba-amber resize-none'
       />
       <div className='flex justify-between items-center'>
-        <p className='text-[11px] text-dabba-text/40'>{body.length}/280</p>
+        <p className='text-[11px] text-dabba-text/40'>
+          {body.length}/{MAX_LENGTH}
+        </p>
         <button
           type='submit'
-          disabled={!body.trim() || posting}
+          disabled={!trimmedBody || posting}
           className='bg-dabba-amber text-dabba-bg font-semibold text-sm rounded-lg px-5 py-2 disabled:opacity-40'
         >
           {posting ? "posting..." : "share"}
@@ -53,4 +61,4 @@ const CheerPostComposer = ({ onPosted }) => {
   );
 };
 
-export default CheerPostComposer
+export default CheerPostComposer;

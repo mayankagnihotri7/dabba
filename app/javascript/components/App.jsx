@@ -4,38 +4,56 @@ import NamePrompt from "./auth/NamePrompt";
 import MomentScreen from "./checkin/MomentScreen";
 import CheerWallScreen from "./CheerWallScreen";
 
+const TABS = {
+  MOMENT: "moment",
+  CHEER_WALL: "cheerwall",
+};
+
+const TOKEN_KEY = "dabba_token";
+
 const App = () => {
-  const [token, setToken] = useState(localStorage.getItem("dabba_token"));
+  const [token, setToken] = useState(localStorage.getItem(TOKEN_KEY));
   const [justLoggedIn, setJustLoggedIn] = useState(false);
-  const [tab, setTab] = useState("moment");
+  const [activeTab, setActiveTab] = useState(TABS.MOMENT);
 
   const handleAuthenticated = (newToken) => {
     setToken(newToken);
     setJustLoggedIn(true);
   };
 
-  if (!token) return <AuthScreen onAuthenticated={handleAuthenticated} />;
-  if (justLoggedIn)
-    return <NamePrompt token={token} onDone={(e) => setJustLoggedIn(false)} />;
+  if (!token) {
+    return <AuthScreen onAuthenticated={handleAuthenticated} />;
+  }
+
+  if (justLoggedIn) {
+    return <NamePrompt token={token} onDone={() => setJustLoggedIn(false)} />;
+  }
+
+  const screens = {
+    moment: <MomentScreen />,
+    cheerwall: <CheerWallScreen />,
+  };
+
+  const tabs = [
+    { id: "moment", label: "Check Moment" },
+    { id: "cheerwall", label: "Cheer Wall" },
+  ];
 
   return (
-    <div className="min-h-screen bg-dabba-bg flex flex-col">
+    <div className='min-h-screen bg-dabba-bg flex flex-col'>
       <nav className='flex justify-center gap-2 pt-6'>
-        <button
-          onClick={() => setTab("moment")}
-          className={`text-xs font-mono uppercase tracking-widest px-3 ${tab === "moment" ? "text-dabba-amber" : "text-dabba-text/40"} cursor-pointer`}
-        >
-          Check Moment
-        </button>
-        <button
-          onClick={() => setTab("cheerwall")}
-          className={`text-xs font-mono uppercase tracking-widest px-3 ${tab === "cheerwall" ? "text-dabba-amber" : "text-dabba-text/40"} cursor-pointer`}
-        >
-          Cheer Wall
-        </button>
+        {tabs.map(({ id, label }) => (
+          <button
+            key={id}
+            onClick={() => setActiveTab(id)}
+            className={`text-xs font-mono uppercase tracking-widest px-3 cursor-pointer ${activeTab ? "text-dabba-amber" : "text-dabba-text/40"}`}
+          >
+            {label}
+          </button>
+        ))}
       </nav>
-      <div className="flex-1 flex items-center justify-center px-6">
-        {tab === "moment" ? <MomentScreen /> : <CheerWallScreen />}
+      <div className='flex-1 flex items-center justify-center px-6'>
+        {screens[activeTab]}
       </div>
     </div>
   );

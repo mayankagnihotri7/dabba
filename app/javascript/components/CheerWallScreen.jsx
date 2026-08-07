@@ -13,18 +13,27 @@ const CheerWallScreen = () => {
   const [hasMore, setHasMore] = useState(true);
 
   const loadPosts = async (reset = false) => {
-    setLoading(true);
-    const targetPage = reset ? 1 : page;
-    const params = { page: targetPage };
+    try {
+      setLoading(true);
 
-    if (showMineOnly) params.mine = "true";
-    if (activeTag) params.tag = activeTag;
+      const targetPage = reset ? 1 : page;
+      
+      const params = { 
+        page: targetPage,
+        ...(showMineOnly && { mine: "true" }),
+        ...(activeTag && { tag: activeTag })
+      };
 
-    const res = await api.get("/cheer_posts", { params });
-    setPosts(reset ? res.data : [...posts, res.data]);
-    setHasMore(res.data.length === 20);
-    setPage(targetPage + 1);
-    setLoading(false);
+      const { data } = await api.get("/cheer_posts", { params });
+
+      setPosts((prev) => (reset ? data : [...prev, data]));
+      setHasMore(data.length === 20);
+      setPage(targetPage + 1);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const loadTags = async () => {
