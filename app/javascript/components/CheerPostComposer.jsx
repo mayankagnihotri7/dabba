@@ -29,7 +29,7 @@ const CheerPostComposer = ({ onPosted }) => {
       setBody("");
       onPosted();
     } catch (err) {
-      console.error(err)
+      console.error(err);
       setError(err.response?.data?.error || "Couldn't post right now");
     } finally {
       setPosting(false);

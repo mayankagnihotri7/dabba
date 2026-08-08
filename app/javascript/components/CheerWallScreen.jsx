@@ -14,8 +14,6 @@ const CheerWallScreen = () => {
 
   const loadPosts = async (reset = false) => {
     try {
-      setLoading(true);
-
       const targetPage = reset ? 1 : page;
       
       const params = { 
@@ -26,7 +24,7 @@ const CheerWallScreen = () => {
 
       const { data } = await api.get("/cheer_posts", { params });
 
-      setPosts((prev) => (reset ? data : [...prev, data]));
+      setPosts((prev) => (reset ? data : [...prev, ...data]));
       setHasMore(data.length === 20);
       setPage(targetPage + 1);
     } catch (error) {
