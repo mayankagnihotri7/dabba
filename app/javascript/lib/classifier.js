@@ -1,4 +1,5 @@
 import { pipeline } from "@huggingface/transformers";
+import { EMOTION_TO_MOOD } from "../utils/constants";
 
 let classifierPromise = null;
 
@@ -11,11 +12,6 @@ export const getClassifier = (onProgress) => {
     );
   }
   return classifierPromise;
-};
-
-const EMOTION_TO_MOOD = {
-  positive: "good",
-  negative: "stressed",
 };
 
 export const classifyMood = async (text) => {
