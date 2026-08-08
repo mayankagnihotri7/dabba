@@ -15,11 +15,11 @@ const CheerWallScreen = () => {
   const loadPosts = async (reset = false) => {
     try {
       const targetPage = reset ? 1 : page;
-      
-      const params = { 
+
+      const params = {
         page: targetPage,
         ...(showMineOnly && { mine: "true" }),
-        ...(activeTag && { tag: activeTag })
+        ...(activeTag && { tag: activeTag }),
       };
 
       const { data } = await api.get("/cheer_posts", { params });
@@ -37,6 +37,11 @@ const CheerWallScreen = () => {
   const loadTags = async () => {
     const res = await api.get("/tags");
     setTags(res.data);
+  };
+
+  const handlePosted = () => {
+    loadPosts(true);
+    loadTags();
   };
 
   useEffect(() => {
@@ -80,11 +85,7 @@ const CheerWallScreen = () => {
           </div>
         )}
 
-        <CheerPostComposer
-          onPosted={() => {
-            loadPosts(true);
-          }}
-        />
+        <CheerPostComposer onPosted={handlePosted} />
 
         {loading ? (
           <p className='text-dabba-text/40 text-sm text-center'>loading...</p>

@@ -5,7 +5,7 @@ class Api::V1::CheerPostsController < ApplicationController
 
   def index
     cheer_posts = CheerPost.all.recent
-    cheer_posts = cheer_posts.for_user(current_user.id) if current_user && params[:mine_only]
+    cheer_posts = cheer_posts.for_user(current_user.id) if current_user && params[:mine]
     cheer_posts = cheer_posts.tagged(params[:tag]) if params[:tag].present?
 
     page = (params[:page] || 1).to_i
