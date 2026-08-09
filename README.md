@@ -8,7 +8,7 @@ Commuters spend real time on Mumbai local scrolling reels on autopilot. Dabba is
 
 ## What it does
 
-- **Check in** - tap a mood or write what's on your mind (up to 250 characters). A small language model and sentiment classifier run entirely on-device to classify your mood and generate a short, specific response.
+- **Check in** - tap a mood or write what's on your mind (up to 250 characters). A small language model and sentiment classifier run entirely on-device - the classifier reads your text for positive/negative sentiment, which maps to your mood, while tapping a mood icon directly covers the full range (stressed, tired, neutral, good).
 - **Cheer Wall** - share something good anonymously, taggable with `!#tags`, and browse posts by tag or your own posts.
 - **Private by design** - private check-ins are processed entirely on device. Your vented text never leaves your device and is never stored in the database.
 
