@@ -81,7 +81,7 @@ const AuthScreen = ({ onAuthenticated }) => {
                   autoComplete='off'
                 />
                 <button
-                  className='w-full bg-dabba-amber text-dabba-bg font-semibold text-sm rounded-lg py-3.5'
+                  className='w-full bg-dabba-amber text-dabba-bg font-semibold text-sm rounded-lg py-3.5 cursor-pointer'
                   type='submit'
                 >
                   Send code
@@ -104,7 +104,7 @@ const AuthScreen = ({ onAuthenticated }) => {
                   className='w-full bg-dabba-bg border border-dabba-text/10 rounded-lg px-3.5 py-3 text-dabba-text text-sm mb-5 -tracking-widest font-mono focus:outline-none focus:border-dabba-amber'
                 />
                 <button
-                  className='w-full bg-dabba-amber text-dabba-bg font-semibold text-sm rounded-lg py-3.5'
+                  className='w-full bg-dabba-amber text-dabba-bg font-semibold text-sm rounded-lg py-3.5 cursor-pointer'
                   type='submit'
                 >
                   Verify
