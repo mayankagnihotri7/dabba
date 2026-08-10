@@ -61,7 +61,7 @@ const AuthScreen = ({ onAuthenticated }) => {
             {step === "email" ? (
               <form onSubmit={requestOtp}>
                 <label className='block text-sm text-dabba-text/75 mb-2'>
-                  Mobile number
+                  Email
                 </label>
                 <div className='flex gap-2 mb-5'>
                   <input
