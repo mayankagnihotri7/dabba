@@ -134,7 +134,7 @@ const MomentScreen = () => {
 
           <textarea
             value={note}
-            onChange={(e) => setNote(e.target.value.slice(0, { NOTE_LENGTH }))}
+            onChange={(e) => setNote(e.target.value.slice(0, NOTE_LENGTH ))}
             placeholder="what's on your mind right now?"
             rows={4}
             className='w-full bg-dabba-bg border border-dabba-text/10 rounded-lg px-3.5 py-3 text-dabba-text text-sm mb-2 focus:outline-none focus:border-dabba-amber resize-none'

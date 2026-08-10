@@ -47,7 +47,7 @@ const App = () => {
           <button
             key={id}
             onClick={() => setActiveTab(id)}
-            className={`text-xs font-mono uppercase tracking-widest px-3 cursor-pointer ${activeTab ? "text-dabba-amber" : "text-dabba-text/40"}`}
+            className={`text-xs font-mono uppercase tracking-widest px-3 cursor-pointer ${activeTab === id ? "text-dabba-amber" : "text-dabba-text/40"}`}
           >
             {label}
           </button>
