@@ -4,15 +4,18 @@ import NamePrompt from "./auth/NamePrompt";
 import MomentScreen from "./checkin/MomentScreen";
 import CheerWallScreen from "./CheerWallScreen";
 import { TABS, TOKEN_KEY } from "../utils/constants";
+import IntroCard from "./onboarding/IntroCard";
 
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem(TOKEN_KEY));
   const [justLoggedIn, setJustLoggedIn] = useState(false);
   const [activeTab, setActiveTab] = useState(TABS.MOMENT);
+  const [showIntro, setShowIntro] = useState(false)
 
   const handleAuthenticated = (newToken) => {
     setToken(newToken);
     setJustLoggedIn(true);
+    setShowIntro(true)
   };
 
   if (!token) {
@@ -21,6 +24,10 @@ const App = () => {
 
   if (justLoggedIn) {
     return <NamePrompt token={token} onDone={() => setJustLoggedIn(false)} />;
+  }
+
+  if (showIntro) {
+    return <IntroCard onDone={() => setShowIntro(false)} />
   }
 
   const screens = {
