@@ -1,10 +1,10 @@
 # Dabba
 
-An AI driven wellbeing companion for Mumbai local train commuters - a quick, private moment to check in with yourself during the ride, plus a small anonymous wall of shared good moments.
+An AI driven wellbeing companion for local train commuters - a quick, private moment to check in with yourself during the ride, plus a small anonymous wall of shared good moments.
 
 ## Why
 
-Commuters spend real time on Mumbai local scrolling reels on autopilot. Dabba is a faster, low-effort alternative: tap a mood or vent for a few seconds, get something back that actually responds to what you wrote, and move on with your day.
+Commuters spend real time on local scrolling reels on autopilot. Dabba is a faster, low-effort alternative: tap a mood or vent for a few seconds, get something back that actually responds to what you wrote, and move on with your day.
 
 ## What it does
 
