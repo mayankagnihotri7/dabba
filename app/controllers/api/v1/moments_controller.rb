@@ -13,6 +13,20 @@ class Api::V1::MomentsController < ApplicationController
     render json: { error: "Invalid mood" }, status: :unprocessable_entity
   end
 
+  def streak
+    dates = current_user.moments.distinct.pluck(Arel.sql("DATE(created_at)")).sort.reverse
+    streak = 0
+    expected = Date.current
+
+    dates.each do |date|
+      break unless date == expected
+      streak += 1
+      expected += 1
+    end
+
+    render json: { streak: }
+  end
+
   private
 
   def moment_params
