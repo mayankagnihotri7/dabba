@@ -13,7 +13,7 @@ Rails.application.routes.draw do
       post "auth/verify_otp", to: "auth#verify_otp"
       patch "users/name", to: "auth#update_name"
       get "moments/streak", to: "moments#streak"
-      get "stats", to: "status#index"
+      get "stats", to: "stats#index"
 
       resources :moments, only: [ :create ]
       resources :cheer_posts, only: %i[ index create destroy ]

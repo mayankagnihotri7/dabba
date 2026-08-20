@@ -5,6 +5,7 @@ import { classifyMood, getClassifier } from "../../lib/classifier";
 import { generateResponse, getGenerator } from "../../lib/generator";
 import ModelLoader from "../ModelLoader";
 import { MOODS, NOTE_LENGTH, STUB_RESPONSES } from "../../utils/constants";
+import StatsFooter from "../StatsFooter";
 
 const MomentScreen = () => {
   const [mood, setMood] = useState(null);
@@ -98,6 +99,8 @@ const MomentScreen = () => {
 
     try {
       await api.post("/moments", { mood: finalMood });
+      const streakRes = await api.get("/moments/streak")
+      setStreak(streakRes.data.streak)
     } catch (e) {
       console.error("Failed to save moment", e);
     }
@@ -170,6 +173,7 @@ const MomentScreen = () => {
                 : "Get something for me"}
           </button>
         </form>
+        <StatsFooter />
       </div>
     </div>
   );
