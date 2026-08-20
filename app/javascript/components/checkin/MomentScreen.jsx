@@ -5,6 +5,7 @@ import { classifyMood, getClassifier } from "../../lib/classifier";
 import { generateResponse, getGenerator } from "../../lib/generator";
 import ModelLoader from "../ModelLoader";
 import { MOODS, NOTE_LENGTH, STUB_RESPONSES } from "../../utils/constants";
+import StatsFooter from "../StatsFooter";
 
 const MomentScreen = () => {
   const [mood, setMood] = useState(null);
@@ -12,6 +13,7 @@ const MomentScreen = () => {
   const [response, setResponse] = useState(null);
   const [modelReady, setModelReady] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [streak, setStreak] = useState(null);
   const [progress, setProgress] = useState(0);
   const loadProgress = useRef({ classifier: 0, generator: 0 });
 
@@ -33,6 +35,13 @@ const MomentScreen = () => {
     ])
       .then(() => setModelReady(true))
       .catch((e) => console.error(e));
+  }, []);
+
+  useEffect(() => {
+    api
+      .get("/moments/streak")
+      .then((res) => setStreak(res.data.streak))
+      .catch((e) => console.error(e), "error from streak fetch");
   }, []);
 
   if (!modelReady) return <ModelLoader progress={progress} />;
@@ -90,6 +99,8 @@ const MomentScreen = () => {
 
     try {
       await api.post("/moments", { mood: finalMood });
+      const streakRes = await api.get("/moments/streak")
+      setStreak(streakRes.data.streak)
     } catch (e) {
       console.error("Failed to save moment", e);
     }
@@ -105,6 +116,8 @@ const MomentScreen = () => {
     return <ResponseCard response={response} onDone={reset} />;
   }
 
+  console.log(streak, "streak is loading")
+
   return (
     <div className='w-full max-w-sm mx-auto'>
       <div className='w-full max-w-sm'>
@@ -115,6 +128,11 @@ const MomentScreen = () => {
           <h1 className='font-display text-2xl text-dabba-text'>
             how's the ride
           </h1>
+          {streak !== null && streak > 0 && (
+            <p className='text-center text-xs font-mono text-dabba-teal uppercase tracking-widest mb-4'>
+              {streak} day{streak !== 1 ? "s" : ""} in a row
+            </p>
+          )}
         </div>
 
         <form onSubmit={submit} className='ticket-card pt-6 px-7 pb-7'>
@@ -134,7 +152,7 @@ const MomentScreen = () => {
 
           <textarea
             value={note}
-            onChange={(e) => setNote(e.target.value.slice(0, NOTE_LENGTH ))}
+            onChange={(e) => setNote(e.target.value.slice(0, NOTE_LENGTH))}
             placeholder="what's on your mind right now?"
             rows={4}
             className='w-full bg-dabba-bg border border-dabba-text/10 rounded-lg px-3.5 py-3 text-dabba-text text-sm mb-2 focus:outline-none focus:border-dabba-amber resize-none'
@@ -155,6 +173,7 @@ const MomentScreen = () => {
                 : "Get something for me"}
           </button>
         </form>
+        <StatsFooter />
       </div>
     </div>
   );
